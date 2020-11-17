@@ -408,10 +408,10 @@ MonoBehaviour:
     m_Value: 0
   exposure:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: -1.79
   multiplier:
     m_OverrideState: 1
-    m_Value: 29.65
+    m_Value: 1
     min: 0
   upperHemisphereLuxValue:
     m_OverrideState: 0
@@ -421,8 +421,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.45035058, z: 0.23561297}
   desiredLuxValue:
-    m_OverrideState: 0
-    m_Value: 20000
+    m_OverrideState: 1
+    m_Value: 1.22
   updateMode:
     m_OverrideState: 0
     m_Value: 0
@@ -437,7 +437,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: {fileID: 8900000, guid: 6d47931a5c2c6a84894a0d4db8491e84, type: 3}
   enableDistortion:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   procedural:
     m_OverrideState: 0

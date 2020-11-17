@@ -24,10 +24,17 @@ public static class MathHelper {
 
         return theta;
     }
-    
-    public static float Map (this float value, float fromSource, float toSource, float fromTarget, float toTarget)
-    {
+
+    public static float Map(this float value, float fromSource, float toSource, float fromTarget, float toTarget) {
         return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
+    }
+
+    public static Vector3 Map(this Vector3 value, float fromSource, float toSource, float fromTarget, float toTarget) {
+        return new Vector3(value.x.Map(fromSource, toSource, fromTarget, toTarget), value.y.Map(fromSource, toSource, fromTarget, toTarget), value.z.Map(fromSource, toSource, fromTarget, toTarget));
+    }
+
+    public static Vector3 Map(this Vector3 value, Vector3 fromSource, Vector3 toSource, Vector3 fromTarget, Vector3 toTarget) {
+        return new Vector3(value.x.Map(fromSource.x, toSource.x, fromTarget.x, toTarget.x), value.y.Map(fromSource.y, toSource.y, fromTarget.y, toTarget.y), value.z.Map(fromSource.z, toSource.z, fromTarget.z, toTarget.z));
     }
 
     public static Vector4 V3_V4(this Vector3 vector, float w = 0) {
