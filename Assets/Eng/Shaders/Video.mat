@@ -99,7 +99,7 @@ Material:
     - _frameCount: 101
     - _frameRate: 45
     m_Colors:
-    - Color_1207c3564a08455dbf6a3842464a5fe4: {r: 102.66292, g: 17.303616, b: 118.035385, a: 1}
+    - Color_1207c3564a08455dbf6a3842464a5fe4: {r: 167.6549, g: 28.109804, b: 191.74902, a: 1}
     - Color_c5a48768a51a4be7a7e4a47c3996740f: {r: 0, g: 0.7019608, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
