@@ -20,9 +20,7 @@ public class VideoSamplerEditor : Editor {
         }
         if (sampler.Frames.Count == 0)
             GUI.enabled = false;
-        if (GUILayout.Button("Save as Texture2DArray...")) {
-            sampler.SaveAs();
-        }
+       
         if (GUILayout.Button("Export Frames (as png)...")) {
             sampler.ExportFrames();
         }
@@ -35,7 +33,6 @@ public class VideoSamplerEditor : Editor {
 
         if (sampler.SelectedFrame < sampler.Frames.Count) {
             var selected = sampler.Frames[sampler.SelectedFrame];
-            sampler.VideoMaterial.mainTexture = selected;
             var rect = GUILayoutUtility.GetAspectRect((float) selected.width / selected.height, GUIStyle.none);
             GUI.DrawTexture(rect, selected);
         }
