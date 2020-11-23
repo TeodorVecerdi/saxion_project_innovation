@@ -104,3 +104,5 @@ InitTestScene*.unity
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,rider
 Assets/Resources/Video Frames/
+
+Assets/Samples/

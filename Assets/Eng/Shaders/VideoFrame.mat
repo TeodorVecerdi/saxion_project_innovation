@@ -57,7 +57,7 @@ Material:
     m_Floats:
     - Boolean_2e49151f400040148b42e6411aacefdf: 1
     - Boolean_c8cb67d1748642b89bbd9ff1f42163bd: 1
-    - Vector1_0f00a61beddc4030be4aadaa870f7668: 0.28
+    - Vector1_0f00a61beddc4030be4aadaa870f7668: 0.41
     - Vector1_1: 0.53
     - Vector1_590d0c963f1d49d79e7eebc2e155492a: 0.984
     - _AddPrecomputedVelocity: 0
