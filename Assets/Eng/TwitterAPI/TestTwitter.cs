@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -12,6 +13,13 @@ public class TestTwitter : MonoBehaviour {
     public TMP_Text PostText;
     public bool ShouldDispatch;
     public readonly Queue<TweetInfo> TweetQueue = new Queue<TweetInfo>();
+    public float TimeShown;
+    public float TimeToShow = 1f;
+
+    private void Start() {
+        TwitterAPI1.Initialize(OnEventReceived, OnStreamDown, OnStreamUp);
+        TwitterAPI1.Connect();
+    }
 
     private void Update() {
         /*if (Input.GetKeyDown(KeyCode.Z)) {
@@ -89,7 +97,9 @@ public class TestTwitter : MonoBehaviour {
             TwitterAPI1.Dispatch();
         }
 
-        if (TweetQueue.Count > 0) {
+        TimeShown += Time.deltaTime;
+        if (TweetQueue.Count > 0 && TimeShown >= TimeToShow) {
+            TimeShown = 0f;
             var tweet = TweetQueue.Dequeue();
             NameText.text = tweet.Name;
             UsernameText.text = tweet.Username;
@@ -103,13 +113,23 @@ public class TestTwitter : MonoBehaviour {
                 Debug.Log($"Received tweet\n{evt.JsonText}");
                 
                 var jsonObject = JObject.Parse(evt.JsonText);
-                // var shouldDrop = jsonObject.ContainsKey("quoted_status") || jsonObject.ContainsKey("retweeted_status");
-                // if(shouldDrop) return;
+                var shouldDrop = jsonObject.ContainsKey("quoted_status") || jsonObject.ContainsKey("retweeted_status");
+                if (shouldDrop) {
+                    Debug.Log("Dropped retweet");
+                    return;
+                }
                 
                 var truncated = jsonObject.Value<bool>("truncated");
                 var text = truncated ? jsonObject["extended_tweet"].Value<string>("full_text") : jsonObject.Value<string>("text");
                 var displayName = jsonObject["user"].Value<string>("name");
                 var username = jsonObject["user"].Value<string>("screen_name");
+
+                text = text.Replace("\ufe0f", "");
+                displayName = displayName.Replace("\ufe0f", "");
+                username = username.Replace("\ufe0f", "");
+
+                var lastSpace = text.LastIndexOf(' ');
+                text = text.Substring(0, lastSpace);
                 
                 TweetQueue.Enqueue(new TweetInfo {Text = text, Name = displayName, Username = $"@{username}"});
             }

@@ -26,10 +26,10 @@ public static class TwitterAPI1 {
             source.SourceUp += onSourceUp;
 
         var config = source.AuthConfig;
-        config.ConsumerKey = API_PUBLIC;
-        config.ConsumerSecret = API_SECRET;
-        config.Token = CONSUMER_PUBLIC;
-        config.TokenSecret = CONSUMER_PRIVATE;
+        config.ConsumerKey = CONSUMER_PUBLIC;
+        config.ConsumerSecret = CONSUMER_PRIVATE;
+        config.Token = API_PUBLIC;
+        config.TokenSecret = API_PRIVATE;
         
         Debug.Log("Stream initialized");
         initialized = true;
