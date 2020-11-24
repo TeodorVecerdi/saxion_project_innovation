@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TMPro;
@@ -8,14 +10,18 @@ using TweetSource.EventSource;
 using UnityEngine;
 
 public class TestTwitter : MonoBehaviour {
+    private const string hashtagColor = "#00acee";
+    private const string hashtagRegex = @"(\W)(\#[a-zA-Z0-9]+\b)";
+    
     public TMP_Text NameText;
     public TMP_Text UsernameText;
     public TMP_Text PostText;
     public bool ShouldDispatch;
-    public readonly Queue<TweetInfo> TweetQueue = new Queue<TweetInfo>();
-    public float TimeShown;
     public float TimeToShow = 1f;
-
+    
+    public readonly Queue<TweetInfo> TweetQueue = new Queue<TweetInfo>();
+    private float timeShown;
+    
     private void Start() {
         TwitterAPI1.Initialize(OnEventReceived, OnStreamDown, OnStreamUp);
         TwitterAPI1.Connect();
@@ -97,9 +103,9 @@ public class TestTwitter : MonoBehaviour {
             TwitterAPI1.Dispatch();
         }
 
-        TimeShown += Time.deltaTime;
-        if (TweetQueue.Count > 0 && TimeShown >= TimeToShow) {
-            TimeShown = 0f;
+        timeShown += Time.deltaTime;
+        if (TweetQueue.Count > 0 && timeShown >= TimeToShow) {
+            timeShown = 0f;
             var tweet = TweetQueue.Dequeue();
             NameText.text = tweet.Name;
             UsernameText.text = tweet.Username;
@@ -130,6 +136,8 @@ public class TestTwitter : MonoBehaviour {
 
                 var lastSpace = text.LastIndexOf(' ');
                 text = text.Substring(0, lastSpace);
+                text = HttpUtility.HtmlDecode(text);
+                text = Regex.Replace(text, hashtagRegex, $@"$1<color={hashtagColor}>$2</color>");
                 
                 TweetQueue.Enqueue(new TweetInfo {Text = text, Name = displayName, Username = $"@{username}"});
             }
