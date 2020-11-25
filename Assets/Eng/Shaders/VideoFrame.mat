@@ -59,7 +59,7 @@ Material:
     - Boolean_c8cb67d1748642b89bbd9ff1f42163bd: 1
     - Vector1_0f00a61beddc4030be4aadaa870f7668: 0.41
     - Vector1_1: 0.53
-    - Vector1_590d0c963f1d49d79e7eebc2e155492a: 0.984
+    - Vector1_590d0c963f1d49d79e7eebc2e155492a: 1
     - _AddPrecomputedVelocity: 0
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 1
@@ -100,6 +100,9 @@ Material:
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 0
+    - _borderSize: 1
+    - _globalTransparency: 1
+    - _useScreenBlending: 0
     m_Colors:
     - Color_1207c3564a08455dbf6a3842464a5fe4: {r: 47.937256, g: 6.7764707, b: 40.156864, a: 1}
     - Color_c5a48768a51a4be7a7e4a47c3996740f: {r: 0, g: 0.7019608, b: 0, a: 1}
