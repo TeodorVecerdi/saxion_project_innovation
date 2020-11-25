@@ -1,0 +1,14 @@
+{
+    "BackgroundRemovalColor": {
+        "r": 0.0,
+        "g": 0.6980392336845398,
+        "b": 0.0,
+        "a": 1.0
+    },
+    "AssetGuid": "ec97a992adc253b4ebf98ac096e98585",
+    "VideoClip": {
+        "instanceID": 21294
+    },
+    "VideoClipAssetGuid": "8cc108ab2d72ce145b963ac02103465e",
+    "SampledFrames": true
+}
