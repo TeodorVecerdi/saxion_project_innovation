@@ -110,3 +110,4 @@ Assets/Samples/
 Assets/Eng/TwitterAPI/Token.cs
 
 Packages/
+**/Ignored/**
