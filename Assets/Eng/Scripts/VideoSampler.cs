@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -14,27 +15,30 @@ public class VideoSampler : MonoBehaviour {
     [HideInInspector] public int SelectedFrame;
     [HideInInspector] public bool Sampling;
     private List<(int frameIndex, Texture2D texture)> tempList;
+    private Action<Texture2D, int> onFrameReady;
+    private Action<List<Texture2D>> onSampleComplete;
+    private bool saveFrames;
+    private VideoPlayer player;
 
-    public void Sample(VideoClip clip = null, List<Texture2D> targetList = null, Action<List<Texture2D>> onSampleComplete = null) {
+    public void Sample(VideoClip clip = null, bool saveFrames = true, List<Texture2D> targetList = null, Action<Texture2D, int> onFrameReady = null, Action<List<Texture2D>> onSampleComplete = null) {
         var videoPlayer = gameObject.AddComponent<VideoPlayer>();
-        if (clip != null) videoPlayer.clip = clip;
-        else videoPlayer.clip = Clip;
+        videoPlayer.clip = clip != null ? clip : Clip;
         videoPlayer.Stop();
         videoPlayer.renderMode = VideoRenderMode.APIOnly;
         videoPlayer.prepareCompleted += Prepared;
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += FrameReady;
-        targetList ??= Frames;
         
+        player = videoPlayer;
+        Frames ??= targetList;
+        this.onFrameReady = onFrameReady;
+        this.onSampleComplete = onSampleComplete;
+        this.saveFrames = saveFrames;
+
         videoPlayer.loopPointReached += source => {
-            tempList.Sort((tupleA, tupleB) => tupleA.frameIndex.CompareTo(tupleB.frameIndex));
-            tempList.ForEach(tuple => targetList.Add(tuple.texture));
-            Sampling = false;
-            Debug.Log("Invoked callback");
-            onSampleComplete?.Invoke(targetList);
-            DestroyImmediate(source);
+            OnSampleComplete();
         };
-        
+
         tempList = new List<(int frameIndex, Texture2D texture)>();
         Sampling = true;
         videoPlayer.Prepare();
@@ -62,7 +66,7 @@ public class VideoSampler : MonoBehaviour {
 
     private void FrameReady(VideoPlayer source, long frameidx) {
         var renderTexture = source.texture as RenderTexture;
-        AsyncGPUReadback.Request(renderTexture, 0, TextureFormat.ARGB32, (request => OnCompleteReadback(request, source, frameidx)));
+        AsyncGPUReadback.Request(renderTexture, 0, TextureFormat.ARGB32, request => OnCompleteReadback(request, source, frameidx));
     }
 
     private void OnCompleteReadback(AsyncGPUReadbackRequest request, VideoPlayer source, long frameIndex) {
@@ -70,10 +74,39 @@ public class VideoSampler : MonoBehaviour {
             Debug.Log("GPU readback error detected.");
             return;
         }
+
         var texture = new Texture2D((int) source.width, (int) source.height, TextureFormat.ARGB32, false);
         texture.LoadRawTextureData(request.GetData<uint>());
         texture.Apply();
-        tempList.Add(((int)frameIndex, texture));
+        if(saveFrames) 
+            tempList.Add(((int) frameIndex, texture));
+        onFrameReady?.Invoke(texture, (int) frameIndex);
         source.frame = frameIndex + 1;
+        if (frameIndex + 1 >= (long) source.frameCount) {
+            StartCoroutine(FinishedSampling(10, 2.5f));
+        }
+    }
+
+    private void OnSampleComplete() {
+        if (saveFrames) {
+            tempList.Sort((tupleA, tupleB) => tupleA.frameIndex.CompareTo(tupleB.frameIndex));
+            tempList.ForEach(tuple => Frames.Add(tuple.texture));
+        }
+
+        onSampleComplete?.Invoke(Frames);
+        Sampling = false;
+        DestroyImmediate(player);
+    }
+
+    private IEnumerator FinishedSampling(int timeoutTries, float timeout) {
+        for (var i = 0; i < timeoutTries; i++) {
+            if(Sampling) yield return new WaitForSecondsRealtime(timeout);
+            else yield break;
+        }
+        
+        yield return null;
+        if (Sampling) {
+            OnSampleComplete();
+        }
     }
 }
