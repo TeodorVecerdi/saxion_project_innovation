@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [ExecuteAlways]
 public class LightShowMaster : MonoBehaviour {
@@ -28,46 +29,47 @@ public class LightShowMaster : MonoBehaviour {
     public LightShowController ChurchClockNegativeXTemplate;
     public LightShowController ChurchClockPositiveZTemplate;
 
-    private Dictionary<ProjectionType, Transform> transforms;
-    private Dictionary<ProjectionType, LightShowController> templates;
-    private Dictionary<ProjectionType, List<LightShowController>> lightShowsInactive;
-    private Dictionary<ProjectionType, List<LightShowController>> lightShowsActive;
-    private Dictionary<ProjectionType, int> pooledCount = new Dictionary<ProjectionType, int> {
-        {ProjectionType.Main, 2},
-        {ProjectionType.ChurchClockAll, 2},
-        {ProjectionType.ChurchClockPositiveX, 2},
-        {ProjectionType.ChurchClockNegativeX, 2},
-        {ProjectionType.ChurchClockPositiveZ, 2}
-    };
+    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, Transform> transforms;
+    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, LightShowController> templates;
+    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, List<LightShowController>> lightShowsInactive;
+    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, List<LightShowController>> lightShowsActive;
+    [SerializeField, HideInInspector] private SerializedDictionary<ProjectionType, int> pooledCount;
 
     private void BuildDictionaries() {
-        transforms = new Dictionary<ProjectionType, Transform> {
+        transforms = new SerializedDictionary<ProjectionType, Transform> {
             {ProjectionType.Main, MainTransform},
             {ProjectionType.ChurchClockAll, ChurchClockAllTransform},
             {ProjectionType.ChurchClockPositiveX, ChurchClockPositiveXTransform},
             {ProjectionType.ChurchClockNegativeX, ChurchClockNegativeXTransform},
             {ProjectionType.ChurchClockPositiveZ, ChurchClockPositiveZTransform}
         };
-        templates = new Dictionary<ProjectionType, LightShowController> {
+        templates = new SerializedDictionary<ProjectionType, LightShowController> {
             {ProjectionType.Main, MainTemplate},
             {ProjectionType.ChurchClockAll, ChurchClockAllTemplate},
             {ProjectionType.ChurchClockPositiveX, ChurchClockPositiveXTemplate},
             {ProjectionType.ChurchClockNegativeX, ChurchClockNegativeXTemplate},
             {ProjectionType.ChurchClockPositiveZ, ChurchClockPositiveZTemplate}
         };
-        lightShowsInactive = new Dictionary<ProjectionType, List<LightShowController>> {
+        lightShowsInactive = new SerializedDictionary<ProjectionType, List<LightShowController>> {
             {ProjectionType.Main, new List<LightShowController>()},
             {ProjectionType.ChurchClockAll, new List<LightShowController>()},
             {ProjectionType.ChurchClockPositiveX, new List<LightShowController>()},
             {ProjectionType.ChurchClockNegativeX, new List<LightShowController>()},
             {ProjectionType.ChurchClockPositiveZ, new List<LightShowController>()}
         };
-        lightShowsActive = new Dictionary<ProjectionType, List<LightShowController>> {
+        lightShowsActive = new SerializedDictionary<ProjectionType, List<LightShowController>> {
             {ProjectionType.Main, new List<LightShowController>()},
             {ProjectionType.ChurchClockAll, new List<LightShowController>()},
             {ProjectionType.ChurchClockPositiveX, new List<LightShowController>()},
             {ProjectionType.ChurchClockNegativeX, new List<LightShowController>()},
             {ProjectionType.ChurchClockPositiveZ, new List<LightShowController>()}
+        };
+        pooledCount = new SerializedDictionary<ProjectionType, int> {
+            {ProjectionType.Main, 2},
+            {ProjectionType.ChurchClockAll, 2},
+            {ProjectionType.ChurchClockPositiveX, 2},
+            {ProjectionType.ChurchClockNegativeX, 2},
+            {ProjectionType.ChurchClockPositiveZ, 2}
         };
     }
 
@@ -79,6 +81,7 @@ public class LightShowMaster : MonoBehaviour {
             });
             lightShowsInactive[projectionType].Clear();
         }
+        BuildDictionaries();
     }
 
     public void ResetPool() {
