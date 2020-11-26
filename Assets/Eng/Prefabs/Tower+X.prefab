@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9035298191345641970}
   - component: {fileID: 9035298191345641971}
   - component: {fileID: 9035298191345641968}
+  - component: {fileID: 6762254297995805698}
   m_Layer: 0
   m_Name: Tower+X
   m_TagString: Untagged
@@ -5052,3 +5053,16 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &6762254297995805698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9035298191345641969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e719eae2bb1243bb9e594314896cbcc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProjectionType: 0
