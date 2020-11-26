@@ -36,12 +36,10 @@ public class LightShowVideo : ScriptableObject {
         Sampling = true;
         var gameObject = new GameObject("Temp_Sampler");
         var sampler = gameObject.AddComponent<VideoSampler>();
-        sampler.Sample(Data.VideoClip, new List<Texture2D>(), list => {
+        sampler.Sample(Data.VideoClip, false, null, (frame, frameIndex) => {
+            File.WriteAllBytes($"{Application.dataPath}/Resources/Video Frames/{Data.VideoClipAssetGuid}/{frameIndex}.png", frame.EncodeToPNG());
+        }, _ => {
             Sampling = false;
-            for (var index = 0; index < list.Count; index++) {
-                File.WriteAllBytes($"{Application.dataPath}/Resources/Video Frames/{Data.VideoClipAssetGuid}/{index}.png", list[index].EncodeToPNG());
-            }
-
             AssetDatabase.Refresh();
             Data.SampledFrames = true;
             sampler.QueueDestroy();

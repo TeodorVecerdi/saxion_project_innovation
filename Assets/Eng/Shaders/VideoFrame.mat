@@ -39,7 +39,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _currentFrame:
-        m_Texture: {fileID: 2800000, guid: eac7d81a61a6e42408fb0f532963bf81, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -57,9 +57,9 @@ Material:
     m_Floats:
     - Boolean_2e49151f400040148b42e6411aacefdf: 1
     - Boolean_c8cb67d1748642b89bbd9ff1f42163bd: 1
-    - Vector1_0f00a61beddc4030be4aadaa870f7668: 0.28
+    - Vector1_0f00a61beddc4030be4aadaa870f7668: 0.41
     - Vector1_1: 0.53
-    - Vector1_590d0c963f1d49d79e7eebc2e155492a: 0.984
+    - Vector1_590d0c963f1d49d79e7eebc2e155492a: 1
     - _AddPrecomputedVelocity: 0
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 1
@@ -100,11 +100,17 @@ Material:
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 0
+    - _borderSize: 1
+    - _globalTransparency: 1
+    - _useScreenBlending: 1
     m_Colors:
     - Color_1207c3564a08455dbf6a3842464a5fe4: {r: 47.937256, g: 6.7764707, b: 40.156864, a: 1}
     - Color_c5a48768a51a4be7a7e4a47c3996740f: {r: 0, g: 0.7019608, b: 0, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _baseColor: {r: 1, g: 1, b: 1, a: 0}
     - _chromaKeyColor: {r: 0, g: 0.69803923, b: 0, a: 1}
-    - _emissionColor: {r: 32, g: 23.44847, b: 0, a: 1}
+    - _emissionColor: {r: 32, g: 32, b: 32, a: 1}
+    - _offset: {r: 0, g: 0, b: 0, a: 0}
+    - _tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

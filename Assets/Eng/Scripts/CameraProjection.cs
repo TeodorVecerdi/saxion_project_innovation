@@ -30,7 +30,7 @@ public class CameraProjection : MonoBehaviour {
         var matrix = Matrix4x4.identity;
         Multiplications.ForEach(mul => matrix *= Convert(mul));
         for (var i = 0; i < vertexList.Count; i++) {
-            vertexList[i] = ((matrix * vertexList[i].V3_V4(1))).V4_V3();
+            vertexList[i] = ((matrix * vertexList[i].V4(1))).V3();
         }
 
         mesh.SetVertices(vertexList);
