@@ -36,7 +36,7 @@ fabric.properties
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
-*.unity
+#*.unity
 
 /[Ll]ibrary/
 /[Tt]emp/
