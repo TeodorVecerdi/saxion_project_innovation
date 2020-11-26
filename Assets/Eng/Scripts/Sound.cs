@@ -12,5 +12,7 @@ public class Sound
     public float volume = 0.2f;
     public float pitchMin = 0.9f;
     public float pitchMax = 1.5f;
+
+    public bool loop = false;
 }
 
