@@ -45,7 +45,7 @@ public class VideoSampler : MonoBehaviour {
     }
 
     public void QueueDestroy() {
-        DestroyImmediate(gameObject);
+        Destroy(gameObject);
     }
 
     public void ExportFrames() {
@@ -92,6 +92,7 @@ public class VideoSampler : MonoBehaviour {
             tempList.Sort((tupleA, tupleB) => tupleA.frameIndex.CompareTo(tupleB.frameIndex));
             tempList.ForEach(tuple => Frames.Add(tuple.texture));
         }
+        Debug.Log("OnSampleComplete called");
 
         onSampleComplete?.Invoke(Frames);
         Sampling = false;
@@ -99,6 +100,7 @@ public class VideoSampler : MonoBehaviour {
     }
 
     private IEnumerator FinishedSampling(int timeoutTries, float timeout) {
+        Debug.Log("Finished sampling. Attempting to destroy");
         for (var i = 0; i < timeoutTries; i++) {
             if(Sampling) yield return new WaitForSecondsRealtime(timeout);
             else yield break;

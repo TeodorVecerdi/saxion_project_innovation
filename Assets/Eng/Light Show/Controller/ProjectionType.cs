@@ -2,9 +2,9 @@ using System;
 
 [Serializable]
 public enum ProjectionType {
-    Main,
-    ChurchClockAll,
-    ChurchClockPositiveX,
-    ChurchClockNegativeX,
-    ChurchClockPositiveZ,
+    Main = 0,
+    ChurchClockAll = 1,
+    ChurchClockPositiveX = 2,
+    ChurchClockNegativeX = 3,
+    ChurchClockPositiveZ = 4,
 }
