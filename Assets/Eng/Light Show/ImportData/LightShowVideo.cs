@@ -37,8 +37,10 @@ public class LightShowVideo : ScriptableObject {
         var gameObject = new GameObject("Temp_Sampler");
         var sampler = gameObject.AddComponent<VideoSampler>();
         sampler.Sample(Data.VideoClip, false, null, (frame, frameIndex) => {
+            Debug.Log($"Saving frame {frameIndex}");
             File.WriteAllBytes($"{Application.dataPath}/Resources/Video Frames/{Data.VideoClipAssetGuid}/{frameIndex}.png", frame.EncodeToPNG());
         }, _ => {
+            Debug.Log("Sampling complete [video]");
             Sampling = false;
             AssetDatabase.Refresh();
             Data.SampledFrames = true;
