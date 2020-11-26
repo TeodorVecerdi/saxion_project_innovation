@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< Updated upstream
-guid: 088788bd801428e4dad4dd86e46a3607
-=======
-guid: 926542a8281aa4a4cb5bb19c759ec2de
->>>>>>> Stashed changes
+guid: 2e50cb357bec64b4c8e8f4b874f88448
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
@@ -11,11 +7,7 @@ AudioImporter:
     loadType: 0
     sampleRateSetting: 0
     sampleRateOverride: 44100
-<<<<<<< Updated upstream
-    compressionFormat: 1
-=======
     compressionFormat: 0
->>>>>>> Stashed changes
     quality: 1
     conversionMode: 0
   platformSettingOverrides: {}
