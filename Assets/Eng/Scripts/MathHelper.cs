@@ -37,11 +37,15 @@ public static class MathHelper {
         return new Vector3(value.x.Map(fromSource.x, toSource.x, fromTarget.x, toTarget.x), value.y.Map(fromSource.y, toSource.y, fromTarget.y, toTarget.y), value.z.Map(fromSource.z, toSource.z, fromTarget.z, toTarget.z));
     }
 
-    public static Vector4 V3_V4(this Vector3 vector, float w = 0) {
+    public static Vector4 V4(this Vector3 vector, float w = 0) {
         return new Vector4(vector.x, vector.y, vector.z, w);
     }
+    
+    public static Vector4 V4(this Vector2 vector, float z = 0, float w = 0) {
+        return new Vector4(vector.x, vector.y, z, w);
+    }
 
-    public static Vector3 V4_V3(this Vector4 vector) {
+    public static Vector3 V3(this Vector4 vector) {
         return new Vector3(vector.x, vector.y, vector.z);
     }
 }
