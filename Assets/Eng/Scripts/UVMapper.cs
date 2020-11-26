@@ -48,7 +48,7 @@ public class UVMapper : MonoBehaviour {
         if (Camera == null || Source == null || Target == null) return;
         var sourceMesh = Source.sharedMesh;
         var sourceVertices = sourceMesh.vertices.ToList();
-        var viewportVertices = sourceVertices.Select(vertex => Camera.WorldToViewportPoint((Matrix4x4.Scale(ScaleLeft) * Source.transform.localToWorldMatrix * Matrix4x4.Scale(ScaleRight) * vertex.V3_V4(1)).V4_V3())).ToList();
+        var viewportVertices = sourceVertices.Select(vertex => Camera.WorldToViewportPoint((Matrix4x4.Scale(ScaleLeft) * Source.transform.localToWorldMatrix * Matrix4x4.Scale(ScaleRight) * vertex.V4(1)).V3())).ToList();
         var min = float.PositiveInfinity;
         var max = float.NegativeInfinity;
         viewportVertices.ForEach(vertex => {
