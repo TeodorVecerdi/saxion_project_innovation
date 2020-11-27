@@ -74,25 +74,6 @@ public class LightShowMaster : MonoBehaviour {
         };
     }
 
-    /*public void FixReferences() {
-        foreach (var projectionType in lightShowsInactive.Keys) {
-            lightShowsInactive[projectionType].ForEach(controller => {
-                if(controller != null)
-                    DestroyImmediate(controller.gameObject);
-            });
-            lightShowsInactive[projectionType].Clear();
-        }
-
-        var childCount = transform.childCount;
-        var gameobjectsToRemove = new List<GameObject>();
-        for (var i = 0; i < childCount; i++) {
-            gameobjectsToRemove.Add(transform.GetChild(i).gameObject);
-        }
-        gameobjectsToRemove.ForEach(DestroyImmediate);
-        gameobjectsToRemove.Clear();
-        BuildDictionaries();
-    }*/
-
     public void ResetPool() {
         if (transforms == null || templates == null || lightShowsInactive == null || lightShowsActive == null) {
             BuildLists();
@@ -104,7 +85,9 @@ public class LightShowMaster : MonoBehaviour {
         }
 
         foreach (var lightShowsInactiveType in lightShowsInactive) {
-            lightShowsInactiveType.ForEach(controller => DestroyImmediate(controller.gameObject));
+            lightShowsInactiveType.ForEach(controller => {
+                if (controller != null) DestroyImmediate(controller.gameObject);
+            });
             lightShowsInactiveType.Clear();
         }
 
