@@ -2270,9 +2270,9 @@ MonoBehaviour:
   m_Name: LightShowAsset(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
   Template:
-    EmissionColor: {r: 18.316517, g: 10.086163, b: 0, a: 1}
+    EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    UseScreenBlending: 1
+    UseScreenBlending: 0
     GlobalTransparency: 1
     FrameRate: 30
     TimeOffset: 0
@@ -3439,7 +3439,7 @@ MonoBehaviour:
   m_Version: 3
   m_AnimClip: {fileID: 0}
   m_Locked: 0
-  m_Muted: 0
+  m_Muted: 1
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
   m_Parent: {fileID: -2279772956550356134}
