@@ -31,10 +31,9 @@ public class LightShowMaster : MonoBehaviour {
 
     private List<Transform> transforms;
     private List<LightShowController> templates;
-    private List<List<LightShowController>> lightShowsInactive;
-    private List<List<LightShowController>> lightShowsActive;
+    private List<LightShowList> lightShowsInactive;
+    private List<LightShowList> lightShowsActive;
     private List<int> pooledCount;
-    
 
     private void BuildLists() {
         transforms = new List<Transform> {
@@ -51,19 +50,19 @@ public class LightShowMaster : MonoBehaviour {
             ChurchClockNegativeXTemplate,
             ChurchClockPositiveZTemplate
         };
-        lightShowsInactive = new List<List<LightShowController>> {
-            new List<LightShowController>(),
-            new List<LightShowController>(),
-            new List<LightShowController>(),
-            new List<LightShowController>(),
-            new List<LightShowController>()
+        lightShowsInactive = new List<LightShowList> {
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>())
         };
-        lightShowsActive = new List<List<LightShowController>> {
-            new List<LightShowController>(),
-            new List<LightShowController>(),
-            new List<LightShowController>(),
-            new List<LightShowController>(),
-            new List<LightShowController>()
+        lightShowsActive = new List<LightShowList> {
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>())
         };
         pooledCount = new List<int> {
             2,
@@ -75,38 +74,37 @@ public class LightShowMaster : MonoBehaviour {
     }
 
     public void ResetPool() {
-        if (transforms == null || templates == null || lightShowsInactive == null || lightShowsActive == null) {
-            BuildLists();
-        }
-        
-        if (lightShowsActive.SelectMany(pair => pair).Count() != 0) {
+        if (lightShowsActive != null && lightShowsActive.SelectMany(pair => pair.List).Count() != 0) {
             Debug.LogError("Cannot reset Light Show pool while objects are active");
             return;
         }
 
-        foreach (var lightShowsInactiveType in lightShowsInactive) {
-            lightShowsInactiveType.ForEach(controller => {
-                if (controller != null) DestroyImmediate(controller.gameObject);
-            });
-            lightShowsInactiveType.Clear();
+        if (lightShowsInactive != null) {
+            foreach (var lightShowsInactiveType in lightShowsInactive) {
+                lightShowsInactiveType.List.ForEach(controller => {
+                    if (controller != null) DestroyImmediate(controller.gameObject);
+                });
+                lightShowsInactiveType.Clear();
+            }
         }
 
+        BuildLists();
         for (var i = 0; i < pooledCount.Count; i++) {
             pooledCount[i] = 2;
             for (var j = 0; j < pooledCount[i]; j++) {
-                lightShowsInactive[i].Add(CreateObject((ProjectionType)i));
+                lightShowsInactive[i].Add(CreateObject((ProjectionType) i));
             }
         }
     }
 
     public LightShowController GetPooled(LightShowBehaviour requester) {
-        var type = (int)requester.ProjectionLocation;
+        var type = (int) requester.ProjectionLocation;
         if (pooledCount[type] == 0) ResetPool();
         if (lightShowsInactive[type].Count == 0) {
             var numToCreate = pooledCount[type];
             pooledCount[type] *= 2;
             for (var i = 0; i < numToCreate; i++) {
-                lightShowsInactive[type].Add(CreateObject((ProjectionType)type));
+                lightShowsInactive[type].Add(CreateObject((ProjectionType) type));
             }
         }
 
@@ -118,7 +116,7 @@ public class LightShowMaster : MonoBehaviour {
     }
 
     public void ReleasePooled(LightShowController controller, LightShowBehaviour requester) {
-        var type = (int)requester.ProjectionLocation;
+        var type = (int) requester.ProjectionLocation;
         if (!lightShowsActive[type].Contains(controller)) {
             Debug.LogError("Trying to release LightShowController when it is not active.");
         }
@@ -129,9 +127,9 @@ public class LightShowMaster : MonoBehaviour {
     }
 
     public LightShowController CreateObject(ProjectionType projectionType) {
-        var instance = Instantiate(templates[(int)projectionType], transforms[(int)projectionType].position, transforms[(int)projectionType].rotation, transform);
+        var instance = Instantiate(templates[(int) projectionType], transforms[(int) projectionType].position, transforms[(int) projectionType].rotation, transform);
         instance.ProjectionType = projectionType;
-        instance.transform.localScale = transforms[(int)projectionType].localScale;
+        instance.transform.localScale = transforms[(int) projectionType].localScale;
         instance.transform.SetParent(transform, true);
         instance.CloneMaterial();
         instance.gameObject.SetActive(false);
