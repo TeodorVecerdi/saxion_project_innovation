@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class Sound
 {
-    public string name;
+    //public string name;
     [HideInInspector]
     public AudioSource source;
     public AudioClip clip;
@@ -13,6 +13,7 @@ public class Sound
     public float pitchMin = 0.9f;
     public float pitchMax = 1.5f;
 
+   // public bool playOnAwake = false;
     public bool loop = false;
 }
 
