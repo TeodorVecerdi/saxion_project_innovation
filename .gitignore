@@ -110,3 +110,5 @@ Assets/Eng/TwitterAPI/Token.cs
 Packages/
 **/Ignored/**
 ProjectSettings/ProjectVersion.txt
+
+ProjectSettings/ProjectVersionPrevious.txt
