@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -12,19 +13,21 @@ using UnityEngine;
 public class TestTwitter : MonoBehaviour {
     private const string hashtagColor = "#00acee";
     private const string hashtagRegex = @"(\W)(\#[a-zA-Z0-9]+\b)";
-    
+    private const string atRegex = @"(@[a-zA-Z0-9]+\b)";
+
     public TMP_Text NameText;
     public TMP_Text UsernameText;
     public TMP_Text PostText;
     public bool ShouldDispatch;
     public float TimeToShow = 1f;
-    
+    public List<string> Tracker;
+
     public readonly Queue<TweetInfo> TweetQueue = new Queue<TweetInfo>();
     private float timeShown;
-    
+
     private void Start() {
         TwitterAPI1.Initialize(OnEventReceived, OnStreamDown, OnStreamUp);
-        TwitterAPI1.Connect();
+        TwitterAPI1.Connect(Tracker.ToArray());
     }
 
     private void Update() {
@@ -34,7 +37,7 @@ public class TestTwitter : MonoBehaviour {
         }
 
         if (Input.GetKeyUp(KeyCode.C)) {
-            TwitterAPI1.Connect();
+            TwitterAPI1.Connect(Tracker.ToArray());
         }
 
         if (Input.GetKeyUp(KeyCode.D)) {
@@ -59,18 +62,36 @@ public class TestTwitter : MonoBehaviour {
         try {
             if (!string.IsNullOrEmpty(evt.JsonText)) {
                 Debug.Log($"Received tweet\n{evt.JsonText}");
-                
+
                 var jsonObject = JObject.Parse(evt.JsonText);
-                var shouldDrop = jsonObject.ContainsKey("quoted_status") || jsonObject.ContainsKey("retweeted_status");
-                if (shouldDrop) {
+                var isRetweet = jsonObject.ContainsKey("retweeted_status");
+                var isQuotedStatus = jsonObject.ContainsKey("quoted_status");
+                
+                var lang = jsonObject.Value<string>("lang");
+                var isEnglishDutch = lang == "en" || lang == "nl";
+                if (!isEnglishDutch) {
                     Debug.Log("Dropped retweet");
                     return;
                 }
-                
-                var truncated = jsonObject.Value<bool>("truncated");
-                var text = truncated ? jsonObject["extended_tweet"].Value<string>("full_text") : jsonObject.Value<string>("text");
-                var displayName = jsonObject["user"].Value<string>("name");
-                var username = jsonObject["user"].Value<string>("screen_name");
+
+                bool truncated;
+                string text, displayName, username;
+                if (isRetweet) {
+                    truncated = jsonObject["retweeted_status"].Value<bool>("truncated");
+                    text = truncated ? jsonObject["retweeted_status"]["extended_tweet"].Value<string>("full_text") : jsonObject["retweeted_status"].Value<string>("text");
+                    displayName = jsonObject["retweeted_status"]["user"].Value<string>("name");
+                    username = jsonObject["retweeted_status"]["user"].Value<string>("screen_name");
+                } else if (isQuotedStatus) {
+                    truncated = jsonObject["quoted_status"].Value<bool>("truncated");
+                    text = truncated ? jsonObject["quoted_status"]["extended_tweet"].Value<string>("full_text") : jsonObject["quoted_status"].Value<string>("text");
+                    displayName = jsonObject["quoted_status"]["user"].Value<string>("name");
+                    username = jsonObject["quoted_status"]["user"].Value<string>("screen_name");
+                } else {
+                    truncated = jsonObject.Value<bool>("truncated");
+                    text = truncated ? jsonObject["extended_tweet"].Value<string>("full_text") : jsonObject.Value<string>("text");
+                    displayName = jsonObject["user"].Value<string>("name");
+                    username = jsonObject["user"].Value<string>("screen_name");
+                }
 
                 text = text.Replace("\ufe0f", "");
                 displayName = displayName.Replace("\ufe0f", "");
@@ -80,7 +101,8 @@ public class TestTwitter : MonoBehaviour {
                 text = text.Substring(0, lastSpace);
                 text = HttpUtility.HtmlDecode(text);
                 text = Regex.Replace(text, hashtagRegex, $@"$1<color={hashtagColor}>$2</color>");
-                
+                text = Regex.Replace(text, atRegex, $@"<color={hashtagColor}>$1</color>");
+
                 TweetQueue.Enqueue(new TweetInfo {Text = text, Name = displayName, Username = $"@{username}"});
             }
         } catch (JsonReaderException jex) {
