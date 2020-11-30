@@ -35,14 +35,17 @@ public static class TwitterAPI1 {
         initialized = true;
     }
 
-    public static void Connect() {
+    public static void Connect(params string[] tracker) {
+        if (tracker == null || tracker.Length == 0) {
+            tracker = new[] {"#indie", "#indiedev", "#gamedev", "indie game dev", "game dev", "indie dev"};
+        }
         if (!initialized || (connected && source.Active)) {
             Debug.LogWarning("Trying to connect when source is not initialized or is already connected.");
             return;
         }
 
         try {
-            source.Start(new StreamingAPIParameters {Track = new[] {"#indiedev", "#gamedev"}});
+            source.Start(new StreamingAPIParameters {Track = tracker});
             connected = true;
             Debug.Log("Stream connected");
         } catch (Exception ex) {
@@ -53,7 +56,7 @@ public static class TwitterAPI1 {
 
     public static void Dispatch() {
         if (!connected || !source.Active) {
-            Debug.LogWarning("Trying to dispatch when source is not active.");
+            // Debug.LogWarning("Trying to dispatch when source is not active.");
             return;
         }
         
