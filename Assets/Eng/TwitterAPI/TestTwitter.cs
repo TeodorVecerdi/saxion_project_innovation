@@ -14,7 +14,7 @@ using UnityEngine.Events;
 public class TestTwitter : MonoBehaviour {
     private const string hashtagColor = "#00acee";
     private const string hashtagRegex = @"(\W)(\#[a-zA-Z0-9]+\b)";
-    private const string atRegex = @"(@[a-zA-Z0-9]+\b)";
+    private const string atRegex = @"(@[a-zA-Z0-9_]+\b)";
 
     public TMP_Text NameText;
     public TMP_Text UsernameText;
