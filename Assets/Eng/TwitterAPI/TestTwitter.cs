@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using TMPro;
 using TweetSource.EventSource;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TestTwitter : MonoBehaviour {
     private const string hashtagColor = "#00acee";
@@ -21,6 +22,8 @@ public class TestTwitter : MonoBehaviour {
     public bool ShouldDispatch;
     public float TimeToShow = 1f;
     public List<string> Tracker;
+
+    public UnityEvent OnTweetReceived;
 
     public readonly Queue<TweetInfo> TweetQueue = new Queue<TweetInfo>();
     private float timeShown;
@@ -55,6 +58,7 @@ public class TestTwitter : MonoBehaviour {
             NameText.text = tweet.Name;
             UsernameText.text = tweet.Username;
             PostText.text = tweet.Text;
+            OnTweetReceived?.Invoke();
         }
     }
 
