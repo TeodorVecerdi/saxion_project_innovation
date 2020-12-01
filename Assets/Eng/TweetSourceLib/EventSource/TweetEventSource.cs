@@ -170,7 +170,7 @@ namespace TweetSource.EventSource {
             } catch (WebException wex) {
                 FireSourceDown(new TweetEventArgs() {
                     JsonText = "",
-                    InfoText = $"Connection down (web exception): {wex} {string.Join("\n",wex.Response.Headers.AllKeys.ToList().Select(key=> $"{key} => {wex.Response.Headers[key]}"))}"
+                    InfoText = $"Connection down (web exception): {wex}"
                 });
             } catch (ApplicationException aex) {
                 FireSourceDown(new TweetEventArgs() {
