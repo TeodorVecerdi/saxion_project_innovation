@@ -70,6 +70,7 @@ public class UVMapper : MonoBehaviour {
     private void Update() {
         if(Auto) Generate();
     }
+#if UNITY_EDITOR
 
     private void OnEnable() {
         EditorApplication.update += Update;
@@ -78,4 +79,5 @@ public class UVMapper : MonoBehaviour {
     private void OnDisable() {
         EditorApplication.update -= Update;
     }
+#endif
 }

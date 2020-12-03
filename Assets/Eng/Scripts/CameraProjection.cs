@@ -12,6 +12,7 @@ public class CameraProjection : MonoBehaviour {
 
     public bool Enabled;
     public List<MatrixMul> Multiplications;
+#if UNITY_EDITOR
 
     private void OnEnable() {
         EditorApplication.update += Generate;
@@ -20,6 +21,7 @@ public class CameraProjection : MonoBehaviour {
     private void OnDisable() {
         EditorApplication.update -= Generate;
     }
+#endif
 
     public void Generate() {
         if (!Enabled) return;
