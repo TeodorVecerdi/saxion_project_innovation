@@ -31,6 +31,7 @@ public class TestTwitter : MonoBehaviour {
     private float timeShown;
 
     private void Start() {
+        Debug.LogError("Open console");
         TwitterAPI1.Initialize(OnEventReceived, OnStreamDown, OnStreamUp);
         TwitterAPI1.Connect(Tracker.ToArray());
     }
