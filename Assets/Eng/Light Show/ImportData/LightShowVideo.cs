@@ -33,7 +33,13 @@ public class LightShowVideo : ScriptableObject {
             return;
         }
         Sampling = true;
-        var gameObject = new GameObject("Temp_Sampler");
+        BetterVideoSampler.Sample(Data.VideoClip, () => {
+            Sampling = false;
+            AssetDatabase.Refresh();
+            Data.SampledFrames = true;
+            LoadFrames();
+        });
+        /*var gameObject = new GameObject("Temp_Sampler");
         var sampler = gameObject.AddComponent<VideoSampler>();
         sampler.Sample(Data.VideoClip, false, null, (frame, frameIndex) => {
             Debug.Log($"Saving frame {frameIndex}");
@@ -45,7 +51,7 @@ public class LightShowVideo : ScriptableObject {
             Data.SampledFrames = true;
             sampler.QueueDestroy();
             LoadFrames();
-        });
+        });*/
     }
 
     public void LoadFrames() {
