@@ -40,6 +40,7 @@ fabric.properties
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
+/[Bb]uild_old/
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/

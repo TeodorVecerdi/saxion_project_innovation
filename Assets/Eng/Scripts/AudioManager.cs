@@ -1,39 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class AudioManager : MonoBehaviour
-{
-    public Sound sound;
+public class AudioManager : MonoBehaviour {
+    public Sound Sound;
+    private AudioSource source;
 
-    void Awake()
-    {
-        sound.source = gameObject.AddComponent<AudioSource>(); 
-        sound.source.clip = sound.clip;
-        sound.source.volume = sound.volume;
-        //sound.source.pitch = Random.Range(sound.pitchMin, sound.pitchMax);
-        sound.source.playOnAwake = false;
-        sound.source.loop = sound.loop;
-    }
-
-    private void Start()
-    {
-        sound.source.Stop(); //starts when pressing play for some reason
-    }
-
-    private void OnEnable(){
-        if (!sound.source.isPlaying)
-        {
-            sound.source.pitch = Random.Range(sound.pitchMin, sound.pitchMax);
-            sound.source.Play();
+    private void OnEnable() {
+        if (source == null) source = GetComponent<AudioSource>();
+        Debug.Log("OnEnable called");
+        if (!source.isPlaying) {
+            source.pitch = Random.Range(Sound.pitchMin, Sound.pitchMax);
+            source.Play();
         }
     }
 
     private void OnDisable() {
-     if(sound.source.isPlaying)
-         sound.source.Stop();
+        if (source.isPlaying)
+            source.Stop();
     }
 }

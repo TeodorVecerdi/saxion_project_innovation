@@ -20,7 +20,6 @@ public class VideoImporterEditor : ScriptedImporterEditor {
         }
 
         if (GUILayout.Button("Sample Video")) {
-            Debug.Log(Application.dataPath);
             importer.Instance.SampleFrames();
         }
 
