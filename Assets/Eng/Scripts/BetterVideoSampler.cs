@@ -8,9 +8,15 @@ public static class BetterVideoSampler {
     private const string command = "ffmpeg.exe";
     private const string argsFormat = "-i \"{0}\" \"{1}/%4d.jpg\"";
     private const string videoFramesPath = "Resources/Video Frames";
+
+#if UNITY_EDITOR
     private static string AssetsPath => Application.dataPath;
-    
+#else
+    private static string AssetsPath => "";
+#endif
+
     public static void Sample(VideoClip targetClip, Action onComplete = null) {
+#if UNITY_EDITOR
         var framesPath = Path.Combine(AssetsPath, videoFramesPath);
         var assetPath = AssetDatabase.GetAssetPath(targetClip);
         var assetGuid = AssetDatabase.AssetPathToGUID(assetPath);
@@ -33,5 +39,6 @@ public static class BetterVideoSampler {
         prc.Start();
         prc.WaitForExit();
         onComplete?.Invoke();
+#endif
     }
 }

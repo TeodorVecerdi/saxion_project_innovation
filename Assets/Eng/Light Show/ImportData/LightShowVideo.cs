@@ -21,6 +21,7 @@ public class LightShowVideo : ScriptableObject {
     }
 
     public void SampleFrames() {
+        #if UNITY_EDITOR
         if (!Directory.Exists($"{Application.dataPath}/Resources/Video Frames")) {
             Directory.CreateDirectory($"{Application.dataPath}/Resources/Video Frames");
         }
@@ -39,6 +40,7 @@ public class LightShowVideo : ScriptableObject {
             Data.SampledFrames = true;
             LoadFrames();
         });
+        #endif
         /*var gameObject = new GameObject("Temp_Sampler");
         var sampler = gameObject.AddComponent<VideoSampler>();
         sampler.Sample(Data.VideoClip, false, null, (frame, frameIndex) => {
@@ -55,6 +57,7 @@ public class LightShowVideo : ScriptableObject {
     }
 
     public void LoadFrames() {
+        #if UNITY_EDITOR
         if (!Data.SampledFrames) {
             SampleFrames();
             return;
@@ -74,5 +77,6 @@ public class LightShowVideo : ScriptableObject {
         });*/
         // Data.Frames.AddRange(frames);
         Data.LoadedFrames = true;
+        #endif
     }
 }
