@@ -124,6 +124,7 @@ public class TestTwitter : MonoBehaviour {
 
     private void OnStreamDown(object sender, TweetEventArgs evt) {
         Debug.Log($"On Stream Down {evt.InfoText}\n{evt.JsonText}");
+        TwitterAPI1.Connect(Tracker.ToArray());
     }
 }
 
