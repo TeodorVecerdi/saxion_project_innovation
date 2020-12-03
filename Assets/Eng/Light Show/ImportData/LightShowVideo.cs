@@ -8,7 +8,7 @@ using UnityEngine;
 [Serializable]
 public class LightShowVideo : ScriptableObject {
     [HideInInspector] public string AssetGuid;
-    public LightShowVideoData Data;
+    [SerializeField] public LightShowVideoData Data;
     [NonSerialized] public bool Sampling;
 
     public void Initialize(LightShowVideoData data) {
@@ -21,6 +21,7 @@ public class LightShowVideo : ScriptableObject {
     }
 
     public void SampleFrames() {
+        #if UNITY_EDITOR
         if (!Directory.Exists($"{Application.dataPath}/Resources/Video Frames")) {
             Directory.CreateDirectory($"{Application.dataPath}/Resources/Video Frames");
         }
@@ -32,22 +33,31 @@ public class LightShowVideo : ScriptableObject {
             LoadFrames();
             return;
         }
-
         Sampling = true;
-        var gameObject = new GameObject("Temp_Sampler");
+        BetterVideoSampler.Sample(Data.VideoClip, () => {
+            Sampling = false;
+            AssetDatabase.Refresh();
+            Data.SampledFrames = true;
+            LoadFrames();
+        });
+        #endif
+        /*var gameObject = new GameObject("Temp_Sampler");
         var sampler = gameObject.AddComponent<VideoSampler>();
         sampler.Sample(Data.VideoClip, false, null, (frame, frameIndex) => {
+            Debug.Log($"Saving frame {frameIndex}");
             File.WriteAllBytes($"{Application.dataPath}/Resources/Video Frames/{Data.VideoClipAssetGuid}/{frameIndex}.png", frame.EncodeToPNG());
         }, _ => {
+            Debug.Log("Sampling complete [video]");
             Sampling = false;
             AssetDatabase.Refresh();
             Data.SampledFrames = true;
             sampler.QueueDestroy();
             LoadFrames();
-        });
+        });*/
     }
 
     public void LoadFrames() {
+        #if UNITY_EDITOR
         if (!Data.SampledFrames) {
             SampleFrames();
             return;
@@ -59,13 +69,14 @@ public class LightShowVideo : ScriptableObject {
             Data.Frames.Clear();
         }
 
-        var frames = Resources.LoadAll<Texture2D>($"Video Frames/{Data.VideoClipAssetGuid}").ToList();
-        frames.Sort((first, second) => {
+        Data.Frames.AddRange(Resources.LoadAll<Texture2D>($"Video Frames/{Data.VideoClipAssetGuid}"));
+        /*Data.Frames.Sort((first, second) => {
             var nameA = int.Parse(first.name);
             var nameB = int.Parse(second.name);
             return nameA.CompareTo(nameB);
-        });
-        Data.Frames.AddRange(frames);
+        });*/
+        // Data.Frames.AddRange(frames);
         Data.LoadedFrames = true;
+        #endif
     }
 }

@@ -41,7 +41,7 @@ public class Perlin : MonoBehaviour {
         this.texture = texture;
     }
 }
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(Perlin))]
 public class PerlinMapGeneratorEditor : Editor {
     public override void OnInspectorGUI() {
@@ -69,3 +69,4 @@ public class PerlinMapGeneratorEditor : Editor {
         }
     }
 }
+#endif

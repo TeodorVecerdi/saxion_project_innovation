@@ -29,96 +29,82 @@ public class LightShowMaster : MonoBehaviour {
     public LightShowController ChurchClockNegativeXTemplate;
     public LightShowController ChurchClockPositiveZTemplate;
 
-    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, Transform> transforms;
-    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, LightShowController> templates;
-    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, List<LightShowController>> lightShowsInactive;
-    [SerializeField,HideInInspector] private SerializedDictionary<ProjectionType, List<LightShowController>> lightShowsActive;
-    [SerializeField, HideInInspector] private SerializedDictionary<ProjectionType, int> pooledCount;
+    private List<Transform> transforms;
+    private List<LightShowController> templates;
+    private List<LightShowList> lightShowsInactive;
+    private List<LightShowList> lightShowsActive;
+    private List<int> pooledCount;
 
-    private void BuildDictionaries() {
-        transforms = new SerializedDictionary<ProjectionType, Transform> {
-            {ProjectionType.Main, MainTransform},
-            {ProjectionType.ChurchClockAll, ChurchClockAllTransform},
-            {ProjectionType.ChurchClockPositiveX, ChurchClockPositiveXTransform},
-            {ProjectionType.ChurchClockNegativeX, ChurchClockNegativeXTransform},
-            {ProjectionType.ChurchClockPositiveZ, ChurchClockPositiveZTransform}
+    private void BuildLists() {
+        transforms = new List<Transform> {
+            MainTransform,
+            ChurchClockAllTransform,
+            ChurchClockPositiveXTransform,
+            ChurchClockNegativeXTransform,
+            ChurchClockPositiveZTransform
         };
-        templates = new SerializedDictionary<ProjectionType, LightShowController> {
-            {ProjectionType.Main, MainTemplate},
-            {ProjectionType.ChurchClockAll, ChurchClockAllTemplate},
-            {ProjectionType.ChurchClockPositiveX, ChurchClockPositiveXTemplate},
-            {ProjectionType.ChurchClockNegativeX, ChurchClockNegativeXTemplate},
-            {ProjectionType.ChurchClockPositiveZ, ChurchClockPositiveZTemplate}
+        templates = new List<LightShowController> {
+            MainTemplate,
+            ChurchClockAllTemplate,
+            ChurchClockPositiveXTemplate,
+            ChurchClockNegativeXTemplate,
+            ChurchClockPositiveZTemplate
         };
-        lightShowsInactive = new SerializedDictionary<ProjectionType, List<LightShowController>> {
-            {ProjectionType.Main, new List<LightShowController>()},
-            {ProjectionType.ChurchClockAll, new List<LightShowController>()},
-            {ProjectionType.ChurchClockPositiveX, new List<LightShowController>()},
-            {ProjectionType.ChurchClockNegativeX, new List<LightShowController>()},
-            {ProjectionType.ChurchClockPositiveZ, new List<LightShowController>()}
+        lightShowsInactive = new List<LightShowList> {
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>())
         };
-        lightShowsActive = new SerializedDictionary<ProjectionType, List<LightShowController>> {
-            {ProjectionType.Main, new List<LightShowController>()},
-            {ProjectionType.ChurchClockAll, new List<LightShowController>()},
-            {ProjectionType.ChurchClockPositiveX, new List<LightShowController>()},
-            {ProjectionType.ChurchClockNegativeX, new List<LightShowController>()},
-            {ProjectionType.ChurchClockPositiveZ, new List<LightShowController>()}
+        lightShowsActive = new List<LightShowList> {
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>()),
+            new LightShowList(new List<LightShowController>())
         };
-        pooledCount = new SerializedDictionary<ProjectionType, int> {
-            {ProjectionType.Main, 2},
-            {ProjectionType.ChurchClockAll, 2},
-            {ProjectionType.ChurchClockPositiveX, 2},
-            {ProjectionType.ChurchClockNegativeX, 2},
-            {ProjectionType.ChurchClockPositiveZ, 2}
+        pooledCount = new List<int> {
+            2,
+            2,
+            2,
+            2,
+            2
         };
-    }
-
-    public void FixReferences() {
-        foreach (var projectionType in lightShowsInactive.Keys) {
-            lightShowsInactive[projectionType].ForEach(controller => {
-                if(controller != null)
-                    DestroyImmediate(controller.gameObject);
-            });
-            lightShowsInactive[projectionType].Clear();
-        }
-        BuildDictionaries();
     }
 
     public void ResetPool() {
-        if (transforms == null || templates == null || lightShowsInactive == null || lightShowsActive == null) {
-            BuildDictionaries();
-        }
-        
-        if (lightShowsActive.SelectMany(pair => pair.Value).Count() != 0) {
+        if (lightShowsActive != null && lightShowsActive.SelectMany(pair => pair.List).Count() != 0) {
             Debug.LogError("Cannot reset Light Show pool while objects are active");
             return;
         }
 
-        foreach (var lightShowController in lightShowsActive.SelectMany(pair => pair.Value)) {
-            DestroyImmediate(lightShowController.gameObject);
-        }
-
-        foreach (var projectionType in lightShowsInactive.Keys) {
-            lightShowsInactive[projectionType].ForEach(controller => DestroyImmediate(controller.gameObject));
-            lightShowsInactive[projectionType].Clear();
-        }
-
-        pooledCount.Keys.ToList().ForEach(key => {
-            pooledCount[key] = 2;
-            for (var i = 0; i < pooledCount[key]; i++) {
-                lightShowsInactive[key].Add(CreateObject(key));
+        if (lightShowsInactive != null) {
+            foreach (var lightShowsInactiveType in lightShowsInactive) {
+                lightShowsInactiveType.List.ForEach(controller => {
+                    if (controller != null) DestroyImmediate(controller.gameObject);
+                });
+                lightShowsInactiveType.Clear();
             }
-        });
+        }
+
+        BuildLists();
+        for (var i = 0; i < pooledCount.Count; i++) {
+            pooledCount[i] = 2;
+            for (var j = 0; j < pooledCount[i]; j++) {
+                lightShowsInactive[i].Add(CreateObject((ProjectionType) i));
+            }
+        }
     }
 
     public LightShowController GetPooled(LightShowBehaviour requester) {
-        ProjectionType type = requester.ProjectionLocation;
+        var type = (int) requester.ProjectionLocation;
         if (pooledCount[type] == 0) ResetPool();
         if (lightShowsInactive[type].Count == 0) {
             var numToCreate = pooledCount[type];
             pooledCount[type] *= 2;
             for (var i = 0; i < numToCreate; i++) {
-                lightShowsInactive[type].Add(CreateObject(type));
+                lightShowsInactive[type].Add(CreateObject((ProjectionType) type));
             }
         }
 
@@ -130,7 +116,7 @@ public class LightShowMaster : MonoBehaviour {
     }
 
     public void ReleasePooled(LightShowController controller, LightShowBehaviour requester) {
-        ProjectionType type = requester.ProjectionLocation;
+        var type = (int) requester.ProjectionLocation;
         if (!lightShowsActive[type].Contains(controller)) {
             Debug.LogError("Trying to release LightShowController when it is not active.");
         }
@@ -141,9 +127,9 @@ public class LightShowMaster : MonoBehaviour {
     }
 
     public LightShowController CreateObject(ProjectionType projectionType) {
-        var instance = Instantiate(templates[projectionType], transforms[projectionType].position, transforms[projectionType].rotation, transform);
+        var instance = Instantiate(templates[(int) projectionType], transforms[(int) projectionType].position, transforms[(int) projectionType].rotation, transform);
         instance.ProjectionType = projectionType;
-        instance.transform.localScale = transforms[projectionType].localScale;
+        instance.transform.localScale = transforms[(int) projectionType].localScale;
         instance.transform.SetParent(transform, true);
         instance.CloneMaterial();
         instance.gameObject.SetActive(false);
