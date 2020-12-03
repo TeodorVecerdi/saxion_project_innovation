@@ -9,7 +9,7 @@ public static class BetterVideoSampler {
     private const string argsFormat = "-i \"{0}\" \"{1}/%4d.jpg\"";
     private const string videoFramesPath = "Resources/Video Frames";
     private static string AssetsPath => Application.dataPath;
-
+    
     public static void Sample(VideoClip targetClip, Action onComplete = null) {
         var framesPath = Path.Combine(AssetsPath, videoFramesPath);
         var assetPath = AssetDatabase.GetAssetPath(targetClip);
