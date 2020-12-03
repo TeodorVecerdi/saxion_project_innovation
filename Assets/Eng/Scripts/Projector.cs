@@ -46,7 +46,7 @@ public class Projector : MonoBehaviour {
     private float targetInteractiveHeading;
     private float sourceInteractiveHeading;
     private decimal time;
-
+#if UNITY_EDITOR
     private void OnEnable() {
         EditorApplication.update += Update;
     }
@@ -54,7 +54,7 @@ public class Projector : MonoBehaviour {
     private void OnDisable() {
         EditorApplication.update -= Update;
     }
-
+#endif
     public void ResetCalibration() {
         average = transform.position;
         min = max = Vector3.zero;

@@ -49,7 +49,8 @@ public class VideoSampler : MonoBehaviour {
     }
 
     public void ExportFrames() {
-        var folderPath = EditorUtility.OpenFolderPanel("Export Frames", Application.dataPath, "Assets");
+    #if UNITY_EDITOR
+    var folderPath = EditorUtility.OpenFolderPanel("Export Frames", Application.dataPath, "Assets");
         folderPath = folderPath.Replace(Application.dataPath, "Assets");
         for (var i = 0; i < Frames.Count; i++) {
             var frame = Frames[i];
@@ -58,7 +59,8 @@ public class VideoSampler : MonoBehaviour {
         }
 
         AssetDatabase.ImportAsset(folderPath);
-    }
+    #endif
+}
 
     private void Prepared(VideoPlayer source) {
         source.Pause();

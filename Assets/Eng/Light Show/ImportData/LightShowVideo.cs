@@ -8,7 +8,7 @@ using UnityEngine;
 [Serializable]
 public class LightShowVideo : ScriptableObject {
     [HideInInspector] public string AssetGuid;
-    public LightShowVideoData Data;
+    [SerializeField] public LightShowVideoData Data;
     [NonSerialized] public bool Sampling;
 
     public void Initialize(LightShowVideoData data) {
@@ -32,7 +32,6 @@ public class LightShowVideo : ScriptableObject {
             LoadFrames();
             return;
         }
-
         Sampling = true;
         var gameObject = new GameObject("Temp_Sampler");
         var sampler = gameObject.AddComponent<VideoSampler>();
@@ -61,13 +60,13 @@ public class LightShowVideo : ScriptableObject {
             Data.Frames.Clear();
         }
 
-        var frames = Resources.LoadAll<Texture2D>($"Video Frames/{Data.VideoClipAssetGuid}").ToList();
-        frames.Sort((first, second) => {
+        Data.Frames.AddRange(Resources.LoadAll<Texture2D>($"Video Frames/{Data.VideoClipAssetGuid}"));
+        /*Data.Frames.Sort((first, second) => {
             var nameA = int.Parse(first.name);
             var nameB = int.Parse(second.name);
             return nameA.CompareTo(nameB);
-        });
-        Data.Frames.AddRange(frames);
+        });*/
+        // Data.Frames.AddRange(frames);
         Data.LoadedFrames = true;
     }
 }

@@ -16,8 +16,11 @@ public class LightShowController : MonoBehaviour {
 
     public void CloneMaterial() {
         var meshRenderer = GetComponent<MeshRenderer>();
-        var newMaterial = new Material(meshRenderer.sharedMaterial);
-        material = meshRenderer.material = newMaterial;
+        var mat = new Material(meshRenderer.sharedMaterial.shader);
+        mat.CopyPropertiesFromMaterial(meshRenderer.sharedMaterial);
+        meshRenderer.sharedMaterial = mat;
+        material = mat;
+        // material = meshRenderer.sharedMaterial = mat;
     }
 
     public void SetFrame(Texture2D frame) {
