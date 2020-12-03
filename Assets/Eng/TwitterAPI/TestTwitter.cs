@@ -16,14 +16,16 @@ public class TestTwitter : MonoBehaviour {
     private const string hashtagRegex = @"(\W)(\#[a-zA-Z0-9]+\b)";
     private const string atRegex = @"(@[a-zA-Z0-9_]+\b)";
 
+    [Header("References")]
     public TMP_Text NameText;
     public TMP_Text UsernameText;
     public TMP_Text PostText;
+    [Header("Settings")]
     public bool ShouldDispatch;
     public float TimeToShow = 1f;
     public List<string> Tracker;
-
     public UnityEvent OnTweetReceived;
+
 
     public readonly Queue<TweetInfo> TweetQueue = new Queue<TweetInfo>();
     private float timeShown;
